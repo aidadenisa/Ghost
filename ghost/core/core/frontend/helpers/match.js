@@ -64,6 +64,10 @@ const handleMatch = (data, operator, value) => {
     return result;
 };
 
+const handleRegex = (text, expression) => {
+    return text.match(new RegExp(expression))
+}
+
 module.exports = function match(...attrs) {
     // options = options || {};
     // options.hash = options.hash || {};
@@ -93,9 +97,12 @@ module.exports = function match(...attrs) {
     } else if (attrs.length === 2) {
         // CASE: two attributes, assume the operator is "="
         result = handleMatch(attrs[0], '=', attrs[1]);
-    } else if (attrs.length === 3) {
+    } else if (attrs.length === 3 && attrs[1] !== '~') {
         // CASE: three attributes, handle the match exactly
         result = handleMatch(attrs[0], attrs[1], attrs[2]);
+    } else if(attrs.length === 3 && attrs[1] === '~'){
+        // CASE: match first attribute with a regular expression 
+        result = handleRegex(attrs[0], attrs[2]);
     } else {
         logging.warn(tpl(messages.invalidAttribute));
         return;

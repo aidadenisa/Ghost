@@ -246,6 +246,16 @@ describe('Match helper', function () {
             }, hash);
         });
 
+        describe('Explicit Match a Regular Expression', function () {
+            runTests({
+                // Text to Regular Expression match
+                '{{match string "~" "Hello"}}': 'true',
+                '{{match string "~" "^ World"}}': 'false',
+                '{{match string "~" " World$"}}': 'true',
+                '{{match string "~" "^.*Wor.*$"}}': 'true',
+            }, hash);
+        });
+
         // SafeStrings represent the original value as an object for example:
         // SafeString { string: true } vs SafeString { string: 'true' }
         // allows us to know if the original value was a boolean or a string
