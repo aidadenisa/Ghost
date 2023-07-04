@@ -250,9 +250,9 @@ describe('Match helper', function () {
             runTests({
                 // Text to Regular Expression match
                 '{{match string "~" "Hello"}}': 'true',
-                '{{match string "~" "^ World"}}': 'false',
-                '{{match string "~" " World$"}}': 'true',
-                '{{match string "~" "^.*Wor.*$"}}': 'true',
+                '{{match string "~" "^ world"}}': 'false',
+                '{{match string "~" " world$"}}': 'true',
+                '{{match string "~" "^.*wor.*$"}}': 'true',
             }, hash);
         });
 

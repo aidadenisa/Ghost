@@ -65,7 +65,7 @@ const handleMatch = (data, operator, value) => {
 };
 
 const handleRegex = (text, expression) => {
-    return text.match(new RegExp(expression))
+    return text.match(new RegExp(expression)) ? true : false;
 }
 
 module.exports = function match(...attrs) {
