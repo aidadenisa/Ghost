@@ -345,10 +345,44 @@ describe('Posts Content API', function () {
     });
 
     it('Can use post reading_time as field', async function () {
-        await agent
+        const req = await agent
             .get(`posts/?fields=reading_time`)
-            .expectStatus(200)
-            .matchBodySnapshot();
+            .expectStatus(200);
+
+        // Check if all the posts have reading_time
+        const numOfPostsWithReadingTime = req.body.posts.filter(
+            post => post.reading_time !== undefined
+        ).length;
+        assert.equal(
+            numOfPostsWithReadingTime,
+            req.body.posts.length,
+            'Posts do not have reading_time field.'
+        );
+
+        // Check if all the posts do NOT have html when it is not requested
+        const numOfPostsWithHTML = req.body.posts.filter(
+            post => post.html !== undefined
+        ).length;
+        assert.equal(
+            numOfPostsWithHTML,
+            0,
+            'Posts have html field when it was not requested.'
+        );
+
+        // Make sure we are not deleting html when it is explicitly requested alongside reading_time
+        const reqWithExplicitHTML = await agent
+            .get(`posts/?fields=reading_time,html`)
+            .expectStatus(200);
+
+        const numOfPostsWithExplicitHTML = reqWithExplicitHTML.body.posts.filter(
+            post => post.html !== undefined && post.reading_time !== undefined
+        ).length;
+        assert.equal(
+            numOfPostsWithExplicitHTML,
+            reqWithExplicitHTML.body.posts.length,
+            'Posts do not have reading_time when html and reading_time are requested'
+        );
+
     });
 
     it('Adds ?ref tags', async function () {

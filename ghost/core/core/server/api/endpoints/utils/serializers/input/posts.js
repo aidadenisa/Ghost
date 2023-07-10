@@ -129,7 +129,7 @@ module.exports = {
 
             setDefaultOrder(frame);
             forceVisibilityColumn(frame);
-            forceHTMLColumn(frame)
+            forceHTMLColumn(frame);
             mapWithRelated(frame);
         }
 
