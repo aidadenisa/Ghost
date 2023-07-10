@@ -4,8 +4,8 @@ const moment = require('moment');
 const testUtils = require('../../utils');
 const models = require('../../../core/server/models');
 
-const { agentProvider, fixtureManager, matchers, mockManager } = require('../../utils/e2e-framework');
-const { anyArray, anyContentVersion, anyEtag, anyUuid, anyISODateTimeWithTZ, anyNumber } = matchers;
+const {agentProvider, fixtureManager, matchers, mockManager} = require('../../utils/e2e-framework');
+const {anyArray, anyContentVersion, anyEtag, anyUuid, anyISODateTimeWithTZ} = matchers;
 
 const postMatcher = {
     published_at: anyISODateTimeWithTZ,
@@ -17,9 +17,9 @@ const postMatcher = {
 const postMatcherShallowIncludes = Object.assign(
     {},
     postMatcher, {
-    tags: anyArray,
-    authors: anyArray
-}
+        tags: anyArray,
+        authors: anyArray
+    }
 );
 
 describe('Posts Content API', function () {
@@ -33,7 +33,7 @@ describe('Posts Content API', function () {
         // Assign a newsletter to one of the posts
         const newsletterId = testUtils.DataGenerator.Content.newsletters[0].id;
         const postId = testUtils.DataGenerator.Content.posts[0].id;
-        await models.Post.edit({ newsletter_id: newsletterId }, { id: postId });
+        await models.Post.edit({newsletter_id: newsletterId}, {id: postId});
     });
 
     it('Can request posts', async function () {
@@ -264,7 +264,7 @@ describe('Posts Content API', function () {
             visibility: 'public',
             published_at: moment().add(15, 'seconds').toDate() // here to ensure sorting is not modified
         });
-        await models.Post.add(publicPost, { context: { internal: true } });
+        await models.Post.add(publicPost, {context: {internal: true}});
 
         const publicPostRes = await agent
             .get(`posts/${publicPost.id}/?include=tiers`)
@@ -279,7 +279,7 @@ describe('Posts Content API', function () {
             visibility: 'members',
             published_at: moment().add(45, 'seconds').toDate() // here to ensure sorting is not modified
         });
-        await models.Post.add(membersPost, { context: { internal: true } });
+        await models.Post.add(membersPost, {context: {internal: true}});
 
         const membersPostRes = await agent
             .get(`posts/${membersPost.id}/?include=tiers`)
@@ -294,7 +294,7 @@ describe('Posts Content API', function () {
             visibility: 'paid',
             published_at: moment().add(30, 'seconds').toDate() // here to ensure sorting is not modified
         });
-        await models.Post.add(paidPost, { context: { internal: true } });
+        await models.Post.add(paidPost, {context: {internal: true}});
 
         const paidPostRes = await agent
             .get(`posts/${paidPost.id}/?include=tiers`)
@@ -319,7 +319,7 @@ describe('Posts Content API', function () {
 
         tiersPost.tiers = [paidTier];
 
-        await models.Post.add(tiersPost, { context: { internal: true } });
+        await models.Post.add(tiersPost, {context: {internal: true}});
 
         const tiersPostRes = await agent
             .get(`posts/${tiersPost.id}/?include=tiers`)
@@ -390,8 +390,8 @@ describe('Posts Content API', function () {
             title: 'title',
             status: 'published',
             slug: 'add-ref-tags',
-            mobiledoc: JSON.stringify({ version: '0.3.1', atoms: [], cards: [['html', { html: '<a href="https://example.com">Link</a><a href="invalid">Test</a>' }]], markups: [], sections: [[10, 0], [1, 'p', []]], ghostVersion: '4.0' })
-        }, { context: { internal: true } });
+            mobiledoc: JSON.stringify({version: '0.3.1',atoms: [],cards: [['html',{html: '<a href="https://example.com">Link</a><a href="invalid">Test</a>'}]],markups: [],sections: [[10,0],[1,'p',[]]],ghostVersion: '4.0'})
+        }, {context: {internal: true}});
 
         let response = await agent
             .get(`posts/${post.id}/`)
