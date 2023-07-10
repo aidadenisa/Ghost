@@ -3853,21 +3853,62 @@ Object {
     },
   },
   "posts": Array [
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
-    Object {},
+    Object {
+      "reading_time": 0,
+    },
+    Object {
+      "reading_time": 0,
+    },
+    Object {
+      "reading_time": 0,
+    },
+    Object {
+      "reading_time": 0,
+    },
+    Object {
+      "reading_time": 2,
+    },
+    Object {
+      "reading_time": 3,
+    },
+    Object {
+      "reading_time": 5,
+    },
+    Object {
+      "reading_time": 2,
+    },
+    Object {
+      "plaintext": "For creators and aspiring entrepreneurs looking to generate a sustainable recurring revenue stream from their creative work, Ghost has built-in payments allowing you to create a subscription commerce business.
+
+Connect your Stripe account to Ghost, and you'll be able to quickly and easily create monthly and yearly premium plans for members to subscribe to, as well as complimentary plans for friends and family.
+
+Ghost takes 0% payment fees, so everything you make is yours to keep!
+
+Using subscriptions, you can build an independent media business like Stratechery, The Information, or The Browser.
+
+The creator economy is just getting started, and Ghost allows you to build something based on technology that you own and control.
+
+Most successful subscription businesses publish a mix of free and paid posts to attract a new audience, and upsell the most loyal members to a premium offering. You can also mix different access levels within the same post, showing a free preview to logged out members and then, right when you're ready for a cliffhanger, that's a good time to...",
+      "reading_time": 1,
+    },
+    Object {
+      "reading_time": 1,
+    },
+    Object {
+      "reading_time": 1,
+    },
+    Object {
+      "reading_time": 1,
+    },
+    Object {
+      "reading_time": 0,
+    },
+    Object {
+      "reading_time": 1,
+    },
+    Object {
+      "reading_time": 1,
+    },
   ],
 }
 `;

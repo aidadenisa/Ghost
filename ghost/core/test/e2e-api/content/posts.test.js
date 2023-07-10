@@ -345,16 +345,10 @@ describe('Posts Content API', function () {
     });
 
     it('Can use post reading_time as field', async function () {
-        const { body } = await agent
+        await agent
             .get(`posts/?fields=reading_time`)
             .expectStatus(200)
-            .matchBodySnapshot({
-                posts: new Array(11).fill({
-                    reading_time: anyNumber
-                })
-            });
-
-        console.log(body);
+            .matchBodySnapshot();
     });
 
     it('Adds ?ref tags', async function () {

@@ -108,7 +108,10 @@ const post = (attrs, frame) => {
         if (columns && columns.includes('visibility') && fields && !fields.includes('visibility')) {
             delete attrs.visibility;
         }
-
+        // NOTE: the html column has to be present in Content API response when reading_time is requested in order to calculate reading_time
+        if (columns && columns.includes('html') && fields && !fields.includes('html')) {
+            delete attrs.html;
+        }
         if (fields && !fields.includes('comments')) {
             delete attrs.comments;
         }

@@ -67,6 +67,12 @@ function forceVisibilityColumn(frame) {
     }
 }
 
+function forceHTMLColumn(frame) {
+    if (frame.options.columns && frame.options.columns.includes('reading_time') && !frame.options.columns.includes('html')) {
+        frame.options.columns.push('html');
+    }
+}
+
 function defaultFormat(frame) {
     if (frame.options.formats) {
         return;
@@ -123,6 +129,7 @@ module.exports = {
 
             setDefaultOrder(frame);
             forceVisibilityColumn(frame);
+            forceHTMLColumn(frame)
             mapWithRelated(frame);
         }
 
