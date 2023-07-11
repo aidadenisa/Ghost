@@ -40,7 +40,10 @@ const ALPHA_FEATURES = [
     'collections',
     'adminXSettings',
     'pageImprovements',
-    'mailEvents'
+    'flatUrls',
+    'mailEvents',
+    'collectionsCard',
+    'headerUpgrade'
 ];
 
 module.exports.GA_KEYS = [...GA_FEATURES];
