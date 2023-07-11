@@ -1,17 +1,18 @@
-import AccountPage from './portal/AccountPage';
-import ConfirmationModal from '../../../admin-x-ds/global/modal/ConfirmationModal';
-import LookAndFeel from './portal/LookAndFeel';
+import AccountPage from './AccountPage';
+import ConfirmationModal from '../../../../admin-x-ds/global/modal/ConfirmationModal';
+import LookAndFeel from './LookAndFeel';
 import NiceModal, {useModal} from '@ebay/nice-modal-react';
-import PortalPreview from './portal/PortalPreview';
+import PortalPreview from './PortalPreview';
 import React, {useContext, useState} from 'react';
-import SignupOptions from './portal/SignupOptions';
-import TabView, {Tab} from '../../../admin-x-ds/global/TabView';
-import useForm, {Dirtyable} from '../../../hooks/useForm';
-import {PreviewModalContent} from '../../../admin-x-ds/global/modal/PreviewModal';
-import {Setting, SettingValue, Tier} from '../../../types/api';
-import {SettingsContext} from '../../providers/SettingsProvider';
-import {fullEmailAddress} from '../../../utils/helpers';
-import {useTiers} from '../../providers/ServiceProvider';
+import SignupOptions from './SignupOptions';
+import TabView, {Tab} from '../../../../admin-x-ds/global/TabView';
+import useForm, {Dirtyable} from '../../../../hooks/useForm';
+import useRouting from '../../../../hooks/useRouting';
+import {PreviewModalContent} from '../../../../admin-x-ds/global/modal/PreviewModal';
+import {Setting, SettingValue, Tier} from '../../../../types/api';
+import {SettingsContext} from '../../../providers/SettingsProvider';
+import {fullEmailAddress} from '../../../../utils/helpers';
+import {useTiers} from '../../../providers/ServiceProvider';
 
 const Sidebar: React.FC<{
     localSettings: Setting[]
@@ -61,8 +62,10 @@ const Sidebar: React.FC<{
 
 const PortalModal: React.FC = () => {
     const modal = useModal();
+    const {updateRoute} = useRouting();
 
     const [selectedPreviewTab, setSelectedPreviewTab] = useState('signup');
+
     const {settings, saveSettings, siteData} = useContext(SettingsContext);
     const {data: tiers, update: updateTiers} = useTiers();
 
@@ -143,11 +146,20 @@ const PortalModal: React.FC = () => {
         {id: 'account', title: 'Account page'},
         {id: 'links', title: 'Links'}
     ];
+    let okLabel = 'Save & close';
+    if (saveState === 'saving') {
+        okLabel = 'Saving...';
+    } else if (saveState === 'saved') {
+        okLabel = 'Saved';
+    }
 
     return <PreviewModalContent
-        deviceSelector={selectedPreviewTab !== 'links'}
+        afterClose={() => {
+            updateRoute('portal');
+        }}
+        deviceSelector={false}
         dirty={saveState === 'unsaved'}
-        okLabel='Save & close'
+        okLabel={okLabel}
         preview={preview}
         previewBgColor={selectedPreviewTab === 'links' ? 'white' : 'grey'}
         previewToolbarTabs={previewTabs}
@@ -158,6 +170,7 @@ const PortalModal: React.FC = () => {
         onOk={async () => {
             if (!Object.values(errors).filter(Boolean).length) {
                 await handleSave();
+                updateRoute('portal');
                 modal.remove();
             }
         }}
