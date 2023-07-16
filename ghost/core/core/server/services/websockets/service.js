@@ -3,6 +3,7 @@ const debug = require('@tryghost/debug')('websockets');
 const logging = require('@tryghost/logging');
 
 const labs = require('../../../shared/labs');
+const handlers = require('../../eventHandlers');
 
 module.exports = {
     async init(ghostServer) {
@@ -12,20 +13,14 @@ module.exports = {
             logging.info(`Starting websockets service`);
 
             const io = new Server(ghostServer.httpServer);
-            let count = 0;
 
-            io.on(`connection`, (socket) => {
-                logging.info(`Websockets client connected (id: ${socket.id})`);
-
-                // on connect, send current value
-                socket.emit('addCount', count);
-                // listen to to changes in value from client
-                socket.on('addCount', () => {
-                    count = count + 1;
-                    debug(`[Websockets] received addCount from client, count is now ${count}`);
-                    socket.broadcast.emit('addCount', count);
-                });
-            });
+            // Here we register the handlers for the bidirectional communication
+            const onConnection = (socket) => {
+                handlers.forEach(handler => {
+                    handler(io, socket);
+                })
+            }
+            io.on("connection", onConnection);
 
             ghostServer.registerCleanupTask(async () => {
                 logging.warn(`Stopping websockets service`);
