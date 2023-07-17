@@ -1,6 +1,7 @@
 import {AddComment, AppContextType, Comment} from './AppContext';
 import {GhostApi} from './utils/api';
 import {Page} from './pages';
+import {socket} from './socket';
 
 async function loadMoreComments({state, api}: {state: AppContextType, api: GhostApi}): Promise<Partial<AppContextType>> {
     let page = 1;
@@ -36,10 +37,18 @@ async function loadMoreReplies({state, api, data: {comment, limit}}: {state: App
 async function addComment({state, api, data: comment}: {state: AppContextType, api: GhostApi, data: AddComment}) {
     const data = await api.comments.add({comment});
     comment = data.comments[0];
+    socket.emit('comments:add', state.postId)
 
     return {
         comments: [comment, ...state.comments],
         commentCount: state.commentCount + 1
+    };
+}
+
+async function updateCount({data: count}: {data: number}) {
+    console.log(count);
+    return {
+        commentCount: count
     };
 }
 
@@ -371,7 +380,8 @@ export const Actions = {
     addReply,
     loadMoreComments,
     loadMoreReplies,
-    updateMember
+    updateMember,
+    updateCount,
 };
 
 export type ActionType = keyof typeof Actions;

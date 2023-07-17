@@ -6,13 +6,18 @@ import Pagination from './Pagination';
 import {ROOT_DIV_ID} from '../../utils/constants';
 import {useAppContext} from '../../AppContext';
 import {useEffect} from 'react';
+import {socket} from '../../socket';
 
 const Content = () => {
-    const {pagination, member, comments, commentCount, commentsEnabled, title, showCount, secundaryFormCount} = useAppContext();
+    const {pagination, member, comments, commentCount, commentsEnabled, title, showCount, secundaryFormCount, postId, dispatchAction} = useAppContext();
     const commentsElements = comments.slice().reverse().map(comment => <Comment key={comment.id} comment={comment} />);
 
     const paidOnly = commentsEnabled === 'paid';
     const isPaidMember = member && !!member.paid;
+
+    const onUpdateCountEvent = (data: {[key: string]: number}) => {
+        dispatchAction('updateCount', data[postId]);
+    }
 
     useEffect(() => {
         const elem = document.getElementById(ROOT_DIV_ID);
@@ -29,6 +34,12 @@ const Content = () => {
                     });
                 });
             }
+        }
+
+        socket.on('comments:count', onUpdateCountEvent)
+        
+        return () => {
+            socket.off('comments:count', onUpdateCountEvent);
         }
     }, []);
 

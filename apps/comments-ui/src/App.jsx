@@ -7,6 +7,8 @@ import {AppContext} from './AppContext';
 import {CommentsFrame} from './components/Frame';
 import {createPopupNotification} from './utils/helpers';
 import {hasMode} from './utils/check-mode';
+import attachServerEventHandlers from './events';
+import {setupSocket} from './socket';
 
 function AuthFrame({adminUrl, onLoad}) {
     if (!adminUrl) {
@@ -194,7 +196,7 @@ export default class App extends React.Component {
 
             let data = null;
             try {
-                data = JSON.parse(event.data);
+                data = typeof(event.data) === 'string' ? JSON.parse(event.data) : event.data;
             } catch (err) {
                 /* eslint-disable no-console */
                 console.error('Error parsing event data', err);
@@ -212,6 +214,10 @@ export default class App extends React.Component {
 
             handler(data.error, data.result);
         });
+
+        const {siteUrl} = this.props;
+        setupSocket(siteUrl);
+        attachServerEventHandlers();
 
         function callApi(action, args) {
             return new Promise((resolve, reject) => {

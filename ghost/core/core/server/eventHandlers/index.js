@@ -1,7 +1,7 @@
-const commentCountHandler = require('./commentCount');
+const commentsHandler = require('./comments');
 const countHandler = require('./count');
 
 module.exports = [
-  commentCountHandler,
+  commentsHandler,
   countHandler
 ]
