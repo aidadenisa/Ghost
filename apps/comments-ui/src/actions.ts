@@ -45,8 +45,7 @@ async function addComment({state, api, data: comment}: {state: AppContextType, a
     };
 }
 
-async function updateCount({data: count}: {data: number}) {
-    console.log(count);
+function updateCount({data: count}: {data: number}) {
     return {
         commentCount: count
     };
