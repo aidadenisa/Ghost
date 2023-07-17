@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const errors = require('@tryghost/errors');
+const uuid = require('uuid');
 
 /**
  * @typedef {import('../../api/shared/frame')} Frame
@@ -21,6 +22,7 @@ module.exports = class CommentsController {
     constructor(service, stats) {
         this.service = service;
         this.stats = stats;
+        this.subscribers = [];
     }
 
     #checkMember(frame) {
@@ -90,12 +92,16 @@ module.exports = class CommentsController {
             );
         }
 
-        return await this.service.commentOnPost(
+        const result = await this.service.commentOnPost(
             data.post_id,
             frame.options.context.member.id,
             data.html,
             frame.options
         );
+
+        this.emitCountUpdate(frame);
+        
+        return result;
     }
 
     async destroy() {
@@ -150,5 +156,51 @@ module.exports = class CommentsController {
             frame.options.id,
             frame.options?.context?.member
         );
+    }
+
+    /**
+     * @param {Frame} frame
+     */
+    addCountSubscriber(frame) {
+        frame.response = async (req, res, next) => {
+            console.debug('subscribe to comment counts aida');
+
+            const apiHeaders = { 
+                'Content-Type': 'text/event-stream',
+                'Connection': 'keep-alive',
+                'Cache-Control': 'no-cache',
+            }
+            res.writeHead(200, apiHeaders);
+
+            const subscriberId = uuid.v4();  
+            const data = `data: ${JSON.stringify({id: subscriberId})}\n\n`;
+            res.write(data);
+            res.flush();
+
+            const subscriber = {
+                id: subscriberId,
+                res
+            };
+            
+            this.subscribers.push(subscriber);
+            
+            req.on('close', () => {
+                console.log(`${subscriberId} Connection closed`);
+                this.subscribers = this.subscribers.filter(sub => sub.id !== subscriberId);
+            });
+        };
+    }
+        
+    /**
+     * @param {Frame} frame
+     */
+    async emitCountUpdate(frame) {
+        const counts = await this.count(frame);
+        const data = `data: ${JSON.stringify(counts)}\n\n`;
+
+        for(let i=0; i<this.subscribers.length; i++) {
+            this.subscribers[i].res.write(data);
+            this.subscribers[i].res.flush();
+        }
     }
 };

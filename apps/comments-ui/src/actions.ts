@@ -43,6 +43,13 @@ async function addComment({state, api, data: comment}: {state: AppContextType, a
     };
 }
 
+function updateCount({data: count}: {data: number}) {
+    console.log(count);
+    return {
+        commentCount: count
+    };
+}
+
 async function addReply({state, api, data: {reply, parent}}: {state: AppContextType, api: GhostApi, data: {reply: any, parent: any}}) {
     let comment = reply;
     comment.parent_id = parent.id;
@@ -371,7 +378,8 @@ export const Actions = {
     addReply,
     loadMoreComments,
     loadMoreReplies,
-    updateMember
+    updateMember,
+    updateCount,
 };
 
 export type ActionType = keyof typeof Actions;

@@ -19,6 +19,7 @@ module.exports = function apiRoutes() {
         {maxAge: config.get('caching:commentsCountAPI:maxAge')}
     );
     router.get('/counts', countsCache, http(api.commentsMembers.counts));
+    router.get('/counts-events', http(api.commentsMembers.countsevents));
 
     router.get('/', http(api.commentsMembers.browse));
     router.get('/:id', http(api.commentsMembers.read));

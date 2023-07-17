@@ -8,11 +8,28 @@ import {useAppContext} from '../../AppContext';
 import {useEffect} from 'react';
 
 const Content = () => {
-    const {pagination, member, comments, commentCount, commentsEnabled, title, showCount, secundaryFormCount} = useAppContext();
+    const {pagination, member, comments, commentCount, commentsEnabled, title, showCount, secundaryFormCount, postId, dispatchAction} = useAppContext();
     const commentsElements = comments.slice().reverse().map(comment => <Comment key={comment.id} comment={comment} />);
 
     const paidOnly = commentsEnabled === 'paid';
     const isPaidMember = member && !!member.paid;
+
+    const setupSSECountEvents = () => {
+        const events = new EventSource(`/members/api/comments/counts-events/?ids=${postId}`);
+    
+        events.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+    
+            console.log(data);
+            if(data[postId] !== undefined) {
+                dispatchAction('updateCount', data[postId])
+            }
+        };
+    
+        events.onerror = (error) => {
+            console.log(error)
+        };
+    };
 
     useEffect(() => {
         const elem = document.getElementById(ROOT_DIV_ID);
@@ -30,6 +47,9 @@ const Content = () => {
                 });
             }
         }
+
+        setupSSECountEvents();
+  
     }, []);
 
     const hasOpenSecundaryForms = secundaryFormCount > 0;

@@ -194,7 +194,7 @@ export default class App extends React.Component {
 
             let data = null;
             try {
-                data = JSON.parse(event.data);
+                data = typeof(event.data) === 'string' ? JSON.parse(event.data) : event.data;
             } catch (err) {
                 /* eslint-disable no-console */
                 console.error('Error parsing event data', err);

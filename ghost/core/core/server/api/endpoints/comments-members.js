@@ -159,7 +159,18 @@ module.exports = {
             return commentsService.controller.count(frame);
         }
     },
-
+    countsevents: {
+        headers: {
+            cacheInvalidate: false,
+        },
+        permissions: false,
+        options: [
+            'ids'
+        ],
+        query(frame) {
+            commentsService.controller.addCountSubscriber(frame);
+        }
+    },
     like: {
         statusCode: 204,
         headers: {
