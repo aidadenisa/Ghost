@@ -18,9 +18,8 @@ const Content = () => {
         const events = new EventSource(`/members/api/comments/counts-events/?ids=${postId}`);
     
         events.onmessage = (event) => {
+            if(!event.data) return;
             const data = JSON.parse(event.data);
-    
-            console.log(data);
             if(data[postId] !== undefined) {
                 dispatchAction('updateCount', data[postId])
             }
