@@ -9,6 +9,7 @@ module.exports = async (io, socket) => {
     debug(`[Websockets] received comment add event from client`);
     // emit change in count to all other listeners
     socket.broadcast.emit('comments:count', count);
+    debug(`[Websockets] broadcast comments:count from ${socket.id}`);
   }
 
   socket.on("comments:add", commentAdded);
