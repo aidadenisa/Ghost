@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const errors = require('@tryghost/errors');
 const uuid = require('uuid');
+const debug = require('@tryghost/debug')('sse');
 
 /**
  * @typedef {import('../../api/shared/frame')} Frame
@@ -163,7 +164,7 @@ module.exports = class CommentsController {
      */
     addCountSubscriber(frame) {
         frame.response = async (req, res, next) => {
-            console.debug('subscribe to comment counts aida');
+            debug('subscribe to: comment counts');
 
             const apiHeaders = { 
                 'Content-Type': 'text/event-stream',
